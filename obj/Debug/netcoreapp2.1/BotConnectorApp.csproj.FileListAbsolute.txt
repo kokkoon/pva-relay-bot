@@ -1,0 +1,14 @@
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\BotConnectorApp.dll.config
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\BotConnectorApp.deps.json
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\BotConnectorApp.runtimeconfig.json
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\BotConnectorApp.runtimeconfig.dev.json
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\BotConnectorApp.dll
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\BotConnectorApp.pdb
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.csproj.AssemblyReference.cache
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.AssemblyInfoInputs.cache
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.AssemblyInfo.cs
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.csproj.CoreCompileInputs.cache
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.dll
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.pdb
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.genruntimeconfig.cache
