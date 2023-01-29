@@ -12,3 +12,4 @@ C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\net
 C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.dll
 C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.pdb
 C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\obj\Debug\netcoreapp2.1\BotConnectorApp.genruntimeconfig.cache
+C:\Users\kkgan\git\azure\PowerVirtualAgentsSamples\BotConnectorApp\bin\Debug\netcoreapp2.1\App.config

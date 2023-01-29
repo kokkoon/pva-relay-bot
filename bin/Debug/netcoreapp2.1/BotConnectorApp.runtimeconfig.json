@@ -4,6 +4,10 @@
     "framework": {
       "name": "Microsoft.NETCore.App",
       "version": "2.1.0"
+    },
+    "configProperties": {
+      "System.GC.Server": true,
+      "System.Runtime.Serialization.EnableUnsafeBinaryFormatterSerialization": false
     }
   }
 }

@@ -27,11 +27,11 @@ namespace Microsoft.PowerVirtualAgents.Samples.BotConnectorApp
         /// </summary>
         public static void Main(string[] args)
         {
-            var botId = ConfigurationManager.AppSettings["BotId"] ?? string.Empty;
-            var tenantId = ConfigurationManager.AppSettings["BotTenantId"] ?? string.Empty;
-            var botTokenEndpoint = ConfigurationManager.AppSettings["BotTokenEndpoint"] ?? string.Empty;
-            var botName = ConfigurationManager.AppSettings["BotName"] ?? string.Empty;
-            s_endConversationMessage = ConfigurationManager.AppSettings["EndConversationMessage"] ?? "quit";
+            var botId = System.Configuration.ConfigurationManager.AppSettings["BotId"] ?? string.Empty;
+            var tenantId = System.Configuration.ConfigurationManager.AppSettings["BotTenantId"] ?? string.Empty;
+            var botTokenEndpoint = System.Configuration.ConfigurationManager.AppSettings["BotTokenEndpoint"] ?? string.Empty;
+            var botName = System.Configuration.ConfigurationManager.AppSettings["BotName"] ?? string.Empty;
+            s_endConversationMessage = System.Configuration.ConfigurationManager.AppSettings["EndConversationMessage"] ?? "quit";
             if (string.IsNullOrEmpty(botId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(botTokenEndpoint) || string.IsNullOrEmpty(botName))
             {
                 Console.WriteLine("Update App.config and start again.");
