@@ -15,6 +15,7 @@ public class BotConnectorController : ControllerBase
     private const string _userDisplayName = "You";
     private static string s_endConversationMessage;
     private static BotService s_botService;
+    private static string _token;
     public BotConnectorController(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -29,6 +30,18 @@ public class BotConnectorController : ControllerBase
             TenantId = tenantId,
             TokenEndPoint = botTokenEndpoint,
         };
+        _token = new TokenStore()
+        {
+            Token = "s_botService.GetTokenAsync().ToString()"
+        };
+        s_endConversationMessage = _configuration.GetValue<string>("EndConversationMessage") ?? "quit";
+        if (string.IsNullOrEmpty(botId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(botTokenEndpoint) || string.IsNullOrEmpty(botName))
+        {
+            Console.WriteLine("Update App.config and start again.");
+            Console.WriteLine("Press any key to exit");
+            Console.Read();
+            Environment.Exit(0);
+        }
         //StartConversation1().Wait();
     }
 
@@ -42,9 +55,9 @@ public class BotConnectorController : ControllerBase
 
     [HttpPost]
     [Route("StartBot")]
-    public async Task<ActionResult> StartBot(string inputMessage)
+    public async Task<ActionResult> StartBot(string inputMessage, string token = "")
     {
-        var response = await StartConversation(inputMessage);
+        var response = await StartConversation(inputMessage, token);
         return Ok(response);
     }
 
@@ -52,35 +65,25 @@ public class BotConnectorController : ControllerBase
     [Route("StartBotSession")]
     public async Task<ActionResult> StartBotSession(string token, string inputMessage)
     {
-
-        var botId = _configuration.GetValue<string>("BotId") ?? string.Empty;
-        var tenantId = _configuration.GetValue<string>("BotTenantId") ?? string.Empty;
-        var botTokenEndpoint = _configuration.GetValue<string>("BotTokenEndpoint") ?? string.Empty;
-        var botName = _configuration.GetValue<string>("BotName") ?? string.Empty;
-        s_endConversationMessage = _configuration.GetValue<string>("EndConversationMessage") ?? "quit";
-        if (string.IsNullOrEmpty(botId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(botTokenEndpoint) || string.IsNullOrEmpty(botName))
-        {
-            Console.WriteLine("Update App.config and start again.");
-            Console.WriteLine("Press any key to exit");
-            Console.Read();
-            Environment.Exit(0);
-        }
-
-
         var response = await StartConversation(inputMessage, token);
         return Ok(response);
     }
 
     //private static async Task<string> StartConversation(string inputMsg)
-    private static async Task<string> StartConversation(string inputMsg, string token = "")
+    private async Task<string> StartConversation(string inputMsg, string token = "")
     {
-        var token1 = String.IsNullOrEmpty(token)? await s_botService.GetTokenAsync():token;
-        using (var directLineClient = new DirectLineClient(token1))
+        _token = String.IsNullOrEmpty(token)? await s_botService.GetTokenAsync() : token;
+        Console.WriteLine("_token: ", _token);
+        Console.WriteLine(" new token: ", await s_botService.GetTokenAsync());
+        using (var directLineClient = new DirectLineClient(_token))
         {
             var conversation = await directLineClient.Conversations.StartConversationAsync();
             var conversationtId = conversation.ConversationId;
             //string inputMessage;
 
+            Console.WriteLine(conversationtId + ": " + inputMsg);
+            //while (!string.Equals(inputMessage = , s_endConversationMessage, StringComparison.OrdinalIgnoreCase))
+            
             if (!string.IsNullOrEmpty(inputMsg) && !string.Equals(inputMsg, s_endConversationMessage))
             {
                 // Send user message using directlineClient
@@ -113,6 +116,7 @@ public class BotConnectorController : ControllerBase
             // responseActivity is standard Microsoft.Bot.Connector.DirectLine.Activity
             // See https://github.com/Microsoft/botframework-sdk/blob/master/specs/botframework-activity/botframework-activity.md for reference
             // Showing examples of Text & SuggestedActions in response payload
+            Console.WriteLine(responseActivity.Text);
             if (!string.IsNullOrEmpty(responseActivity.Text))
             {
                 responseStr = responseStr + string.Join(Environment.NewLine, responseActivity.Text);
@@ -157,6 +161,7 @@ public class BotConnectorController : ControllerBase
                 x.Type == ActivityTypes.Message &&
                 string.Equals(x.From.Name, s_botService.BotName, StringComparison.Ordinal)).ToList();
 
+            //Console.WriteLine(result);
             if (result != null && result.Any())
             {
                 return result;
