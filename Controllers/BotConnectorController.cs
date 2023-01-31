@@ -38,7 +38,6 @@ public class BotConnectorController : ControllerBase
             Console.Read();
             Environment.Exit(0);
         }
-        //StartConversation1().Wait();
     }
 
     [HttpGet]
@@ -52,9 +51,12 @@ public class BotConnectorController : ControllerBase
     [HttpPost]
     [Route("StartBot")]
     [Consumes("application/x-www-form-urlencoded")]
-    public async Task<ActionResult> StartBot(HttpContext req)
+    //public async Task<ActionResult> StartBot(HttpContext req)
+    public async Task<ActionResult> StartBot([FromForm] string From, [FromForm] string Body)
     {
-        Console.WriteLine("ContentType: " + req.Request.Headers.ContentType);
+        Console.WriteLine("From: " + From + ", " + Body);
+
+        /*Console.WriteLine("ContentType: " + req.Request.Headers.ContentType);
         var formDecodedBody = new System.Collections.Generic.Dictionary<String, String>();
         if (String.Equals(req.Request.Headers.ContentType, "application/x-www-form-urlencoded")) {
             var reader = new StreamReader(req.Request.Body);
@@ -71,13 +73,15 @@ public class BotConnectorController : ControllerBase
                 Console.WriteLine(entry.Key + ": " + entry.Value);
             }
         }
+        */
         
         var token = await s_botService.GetTokenAsync();
-        if (!s_tokens.ContainsKey(formDecodedBody["From"])) {
-            s_tokens.Add(formDecodedBody["From"], token);
+        if (!s_tokens.ContainsKey(From)) {
+            s_tokens.Add(From, token);
         }
-        Console.WriteLine("s_tokens: " + s_tokens[formDecodedBody["From"]]);
-        var response = await StartConversation(formDecodedBody["Body"], s_tokens[formDecodedBody["From"]]);
+        Console.WriteLine("s_tokens: " + s_tokens[From]);
+        var response = await StartConversation(Body, s_tokens[From]);
+        
         return Ok(response);
     }
 
@@ -105,9 +109,6 @@ public class BotConnectorController : ControllerBase
                     TextFormat = "plain",
                     Locale = "en-Us",
                 });
-
-                //Console.WriteLine($"{_botDisplayName}:");
-                //Thread.Sleep(_botReplyWaitIntervalInMilSec);
 
                 // Get bot response using directlinClient
                 List<Activity> responses = await GetBotResponseActivitiesAsync(directLineClient, conversationtId);
