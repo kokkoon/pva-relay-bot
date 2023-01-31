@@ -16,14 +16,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-else
-{
-    app.UseHsts();
-}
+//else
+//{
+//    app.UseHsts();
+//}
 
 //app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
+
+//app.Use(async (context, next) =>
+//{
+//    Console.WriteLine($"1. Endpoint: {context.GetEndpoint()?.DisplayName ?? "(null)"}");
+//    await next(context);
+//});
 
 app.MapControllers();
 

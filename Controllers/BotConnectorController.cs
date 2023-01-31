@@ -9,13 +9,13 @@ namespace BotConnectorApi.Controllers;
 public class BotConnectorController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private static string _watermark = null;
+    private static string? _watermark = null;
     private const int _botReplyWaitIntervalInMilSec = 3000;
     private const string _botDisplayName = "Bot";
     private const string _userDisplayName = "You";
-    private static string s_endConversationMessage;
-    private static BotService s_botService;
-    private static string _token;
+    private static string? s_endConversationMessage;
+    private static BotService? s_botService;
+    public static IDictionary<string, string> s_tokens = new Dictionary<string, string>();
     public BotConnectorController(IConfiguration configuration)
     {
         _configuration = configuration;
@@ -29,10 +29,6 @@ public class BotConnectorController : ControllerBase
             BotId = botId,
             TenantId = tenantId,
             TokenEndPoint = botTokenEndpoint,
-        };
-        _token = new TokenStore()
-        {
-            Token = "s_botService.GetTokenAsync().ToString()"
         };
         s_endConversationMessage = _configuration.GetValue<string>("EndConversationMessage") ?? "quit";
         if (string.IsNullOrEmpty(botId) || string.IsNullOrEmpty(tenantId) || string.IsNullOrEmpty(botTokenEndpoint) || string.IsNullOrEmpty(botName))
@@ -55,27 +51,41 @@ public class BotConnectorController : ControllerBase
 
     [HttpPost]
     [Route("StartBot")]
-    public async Task<ActionResult> StartBot(string inputMessage, string token = "")
+    [Consumes("application/x-www-form-urlencoded")]
+    public async Task<ActionResult> StartBot(HttpContext req)
     {
-        var response = await StartConversation(inputMessage, token);
-        return Ok(response);
-    }
+        Console.WriteLine("ContentType: " + req.Request.Headers.ContentType);
+        var formDecodedBody = new System.Collections.Generic.Dictionary<String, String>();
+        if (String.Equals(req.Request.Headers.ContentType, "application/x-www-form-urlencoded")) {
+            var reader = new StreamReader(req.Request.Body);
+            var body = reader.ReadToEndAsync().Result;
 
-    [HttpPost]
-    [Route("StartBotSession")]
-    public async Task<ActionResult> StartBotSession(string token, string inputMessage)
-    {
-        var response = await StartConversation(inputMessage, token);
+            foreach (var encodedKeyValuePair in body.Split('&'))
+            {
+                string decodedKey = System.Net.WebUtility.UrlDecode(encodedKeyValuePair.Split('=')[0]);
+                string decodedValue = System.Net.WebUtility.UrlDecode(encodedKeyValuePair.Split('=')[1]);
+                formDecodedBody.Add(decodedKey, decodedValue);
+            }
+            foreach(KeyValuePair<string, string> entry in formDecodedBody)
+            {
+                Console.WriteLine(entry.Key + ": " + entry.Value);
+            }
+        }
+        
+        var token = await s_botService.GetTokenAsync();
+        if (!s_tokens.ContainsKey(formDecodedBody["From"])) {
+            s_tokens.Add(formDecodedBody["From"], token);
+        }
+        Console.WriteLine("s_tokens: " + s_tokens[formDecodedBody["From"]]);
+        var response = await StartConversation(formDecodedBody["Body"], s_tokens[formDecodedBody["From"]]);
         return Ok(response);
     }
 
     //private static async Task<string> StartConversation(string inputMsg)
     private async Task<string> StartConversation(string inputMsg, string token = "")
     {
-        _token = String.IsNullOrEmpty(token)? await s_botService.GetTokenAsync() : token;
-        Console.WriteLine("_token: ", _token);
-        Console.WriteLine(" new token: ", await s_botService.GetTokenAsync());
-        using (var directLineClient = new DirectLineClient(_token))
+        Console.WriteLine("token: " + token);
+        using (var directLineClient = new DirectLineClient(token))
         {
             var conversation = await directLineClient.Conversations.StartConversationAsync();
             var conversationtId = conversation.ConversationId;
